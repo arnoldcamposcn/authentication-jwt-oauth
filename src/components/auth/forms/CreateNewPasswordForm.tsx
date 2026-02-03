@@ -6,6 +6,8 @@ import { authService } from '../../../api';
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { Button } from '../../atoms/Button';
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
 
 export const FormCreateNewPassword = () => {
   const navigate = useNavigate()
@@ -40,8 +42,8 @@ export const FormCreateNewPassword = () => {
         navigate('/auth/login')
       }, 1000)
     } catch (error) {
-      toast.error('No se pudo actualizar la contraseña')
-      console.error(error)
+      logger.error('Error al actualizar contraseña', error)
+      handleError(error)
     }
   }
 

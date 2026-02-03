@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { Button } from '../../atoms/Button';
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
 
 export const FormRegister = () => {
 
@@ -21,7 +23,7 @@ export const FormRegister = () => {
     const onSubmit = async (data: RegisterData) => {
         try {
             const response = await authService.register(data)
-            console.log('Token guardado en memoria:', response.accessToken)
+            logger.log('Token guardado en memoria:', response.accessToken)
             setAccessToken(response.accessToken)
             reset()
             toast.success('Registro exitoso')
@@ -29,8 +31,8 @@ export const FormRegister = () => {
                 navigate('/dashboard')
             }, 1000)
         } catch (error) {
-            toast.error('Error al registrar')
-            console.error('Error al registrar', error)
+            logger.error('Error al registrar', error)
+            handleError(error)
         }
     }
 

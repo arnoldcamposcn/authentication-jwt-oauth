@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { Button } from '../../atoms/Button'
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
 
 
 export const FormLogin = () => {
@@ -19,11 +21,10 @@ export const FormLogin = () => {
     })
 
     const onSubmit = async (data: LoginData) => {
-
         try {
             const response = await authService.login(data)
             setAccessToken(response.accessToken)
-            console.log('Token guardado en memoria:', response.accessToken)
+            logger.log('Token guardado en memoria:', response.accessToken)
 
             reset()
             toast.success('Inicio de sesión exitoso')
@@ -31,11 +32,9 @@ export const FormLogin = () => {
             setTimeout(() => {
                 navigate('/dashboard')
             }, 1000)
-        }
-
-        catch (error) {
-            console.error('Error al iniciar sesión', error)
-            toast.error('Error al iniciar sesión')
+        } catch (error) {
+            logger.error('Error al iniciar sesión', error)
+            handleError(error)
         }
     }
 

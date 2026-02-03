@@ -1,8 +1,10 @@
+// src/api/axios.instance.ts
 import axios, {
   AxiosError,
-  InternalAxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
+import { getErrorCode, shouldNotRefresh } from "../utils/errorHandler";
 
 /* =====================================================
    ACCESS TOKEN EN MEMORIA (VOLÁTIL)
@@ -11,7 +13,7 @@ let accessToken: string | null = null;
 
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
-};  
+};
 
 export const getAccessToken = () => accessToken;
 
@@ -20,16 +22,15 @@ export const getAccessToken = () => accessToken;
 ===================================================== */
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
-  withCredentials: true,
+  withCredentials: true, // necesario para cookies httpOnly (refresh token)
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 /* =====================================================
-   INTERCEPTOR DE REQUEST
+   INTERCEPTOR DE REQUEST (INJECTA ACCESS TOKEN)
 ===================================================== */
-
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (accessToken && config.headers) {
@@ -57,20 +58,16 @@ const processQueue = (
   token: string | null = null
 ) => {
   failedQueue.forEach((promise) => {
-    if (error) {
-      promise.reject(error);
-    } else if (token) {
-      promise.resolve(token);
-    }
+    if (error) promise.reject(error);
+    else if (token) promise.resolve(token);
   });
 
   failedQueue = [];
 };
 
 /* =====================================================
-   INTERCEPTOR DE RESPONSE (SILENT REFRESH)
+   INTERCEPTOR DE RESPONSE (AUTO REFRESH INTELIGENTE)
 ===================================================== */
-
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
@@ -78,21 +75,50 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Solo manejamos 401
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      // Evitar loops infinitos
+    // 🌐 Error de red
+    if (!error.response) {
+      return Promise.reject(error);
+    }
+
+    const status = error.response.status;
+    const errorCode = getErrorCode(error);
+
+    // Solo interceptamos 401
+    if (status === 401 && !originalRequest._retry) {
+      /* =====================================================
+         VERIFICAR SI NO DEBE INTENTAR REFRESH
+         (Usa errorCode + URL como respaldo)
+      ===================================================== */
+      if (shouldNotRefresh(errorCode, originalRequest.url)) {
+        return Promise.reject(error);
+      }
+
+      /* =====================================================
+         EVITAR LOOP SI FALLA /auth/refresh
+      ===================================================== */
       if (originalRequest.url?.includes("/auth/refresh")) {
         setAccessToken(null);
         return Promise.reject(error);
       }
 
-      // Si ya hay un refresh en curso, encolamos la request
+      /* =====================================================
+         SI NO HAY ACCESS TOKEN EN MEMORIA → NO REFRESH
+      ===================================================== */
+      if (!accessToken) {
+        return Promise.reject(error);
+      }
+
+      /* =====================================================
+         SI YA HAY REFRESH EN CURSO → ENCOLAR
+      ===================================================== */
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
             return api(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -102,7 +128,6 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // El backend lee la cookie httpOnly automáticamente
         const response = await api.post<{ accessToken: string }>(
           "/auth/refresh"
         );
@@ -110,18 +135,18 @@ api.interceptors.response.use(
         const newAccessToken = response.data.accessToken;
         setAccessToken(newAccessToken);
 
-        // Liberamos la cola
         processQueue(null, newAccessToken);
 
-        // Reintentamos la request original con el nuevo token
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
+
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError as AxiosError, null);
         setAccessToken(null);
 
-        // Aquí NO forzamos redirect
-        // La app (AuthContext / Router) debe reaccionar
+        // Aquí la app (AuthContext/Router) decide si hace logout
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
