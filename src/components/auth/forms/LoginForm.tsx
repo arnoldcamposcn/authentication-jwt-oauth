@@ -78,7 +78,7 @@ export const FormLogin = () => {
                                 isLoading={isSubmitting}
                                 fullWidth
                                 loadingText='Iniciando sesión...'
-                                className="btn-purple-gradient"
+                                variant="purple"
                             >
                                 Iniciar sesión
                             </Button>

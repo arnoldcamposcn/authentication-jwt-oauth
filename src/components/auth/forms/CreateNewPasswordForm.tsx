@@ -85,7 +85,7 @@ export const FormCreateNewPassword = () => {
               isLoading={isSubmitting}
               loadingText='Actualizando...'
               fullWidth
-              className="btn-purple-gradient"
+              variant="purple"
             >
               Actualizar contraseña
             </Button>

@@ -11,7 +11,7 @@ import { Button } from '../../atoms/Button'
 import { handleError } from '../../../utils/errorHandler'
 import { logger } from '../../../utils/logger'
 
-export const FormRecoverPassword = () => {
+export const FormRecoverPassword = () => {  
     const [emailSent, setEmailSent] = useState(false)
     const [userEmail, setUserEmail] = useState<string>('')
 
@@ -78,7 +78,7 @@ export const FormRecoverPassword = () => {
                             isLoading={isSubmitting}
                             loadingText='Enviando correo de recuperación...'
                             fullWidth
-                            className="btn-purple-gradient"
+                            variant="purple"
                         >
                             Enviar correo de recuperación
                         </Button>

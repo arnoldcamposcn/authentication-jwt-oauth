@@ -7,6 +7,12 @@
     "RESET_TOKEN_INVALID_OR_EXPIRED": "Recovery link is invalid or expired",
     "EMAIL_SEND_ERROR": "Error sending recovery email",
 
+    "EMAIL_NOT_VERIFIED": "Email not verified. Please verify your email address.",
+    "VERIFICATION_CODE_INVALID_OR_EXPIRED": "Invalid or expired code",
+    "EMAIL_ALREADY_VERIFIED": "Email is already verified",
+    "VERIFICATION_CODE_SEND_ERROR": "Error sending verification code",
+    "USER_NOT_FOUND": "User not found",
+
     "BAD_REQUEST": "Bad request",
     "UNAUTHORIZED": "Unauthorized",
     "FORBIDDEN": "Access forbidden",

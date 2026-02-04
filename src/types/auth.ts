@@ -83,3 +83,18 @@ export interface AuthResponse {
 export interface RefreshResponse {
     accessToken: string;
 }
+
+// ============================================
+// VERIFY EMAIL
+// ============================================
+export const verifyEmailSchema = z.object({
+    email: z.string().email("El email no es válido"),
+    code: z.string().min(1, "El código es requerido"),
+});
+
+export type VerifyEmailData = z.infer<typeof verifyEmailSchema>;
+
+export const INITIAL_VERIFY_EMAIL_DATA: VerifyEmailData = {
+    email: "",
+    code: "",
+};

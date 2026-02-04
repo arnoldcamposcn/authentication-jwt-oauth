@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema, RegisterData } from '../../../types/auth'
 import { toast } from 'react-toastify'
 import { authService } from '../../../api';
-import { setAccessToken } from '../../../api/axios.instance'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
@@ -22,13 +21,16 @@ export const FormRegister = () => {
 
     const onSubmit = async (data: RegisterData) => {
         try {
-            const response = await authService.register(data)
-            logger.log('Token guardado en memoria:', response.accessToken)
-            setAccessToken(response.accessToken)
+            await authService.register(data)
+
+            localStorage.setItem('pendingVerificationEmail', data.email)
+
+            logger.log('Email guardado para verificación:', data.email)
             reset()
-            toast.success('Registro exitoso')
+            toast.success('Registro exitoso. Revisa tu correo para verificar tu cuenta.')
+
             setTimeout(() => {
-                navigate('/dashboard')
+                navigate('/auth/verify-email')
             }, 1000)
         } catch (error) {
             logger.error('Error al registrar', error)
@@ -74,7 +76,7 @@ export const FormRegister = () => {
                             isLoading={isSubmitting}
                             fullWidth
                             loadingText='Registrando...'
-                            className="btn-purple-gradient"
+                            variant="purple"
                         >
                             Registrar
                         </Button>

@@ -5,6 +5,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { getErrorCode, shouldNotRefresh } from "../utils/errorHandler";
+import { API_ENDPOINTS } from "../components/shared/api.endpoints";
 
 /* =====================================================
    ACCESS TOKEN EN MEMORIA (VOLÁTIL)
@@ -95,8 +96,8 @@ api.interceptors.response.use(
 
       /* =====================================================
          EVITAR LOOP SI FALLA /auth/refresh
-      ===================================================== */
-      if (originalRequest.url?.includes("/auth/refresh")) {
+      ===================================================== */  
+      if (originalRequest.url?.includes(API_ENDPOINTS.AUTH.REFRESH)) {
         setAccessToken(null);
         return Promise.reject(error);
       }
@@ -129,7 +130,7 @@ api.interceptors.response.use(
 
       try {
         const response = await api.post<{ accessToken: string }>(
-          "/auth/refresh"
+          API_ENDPOINTS.AUTH.REFRESH
         );
 
         const newAccessToken = response.data.accessToken;
