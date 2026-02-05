@@ -23,3 +23,7 @@ export const FormCreateNewPassword = lazy(() =>
 export const Dashboard = lazy(() =>
   import('../pages/Dashboard').then(m => ({ default: m.Dashboard }))
 );
+
+export const GoogleCallback = lazy(() =>
+  import('../pages/GoogleCallBack').then(m => ({ default: m.GoogleCallback }))
+);

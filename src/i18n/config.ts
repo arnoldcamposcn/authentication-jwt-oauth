@@ -6,8 +6,8 @@ import esTranslations from './es.json';
 import enTranslations from './en.json';
 
 i18n
-  .use(LanguageDetector) // Detecta el idioma del navegador
-  .use(initReactI18next) // Pasa i18n a react-i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
   .init({
     resources: {
       es: {
@@ -17,9 +17,9 @@ i18n
         translation: enTranslations,
       },
     },
-    fallbackLng: 'es', // Idioma por defecto
+    fallbackLng: 'es',
     interpolation: {
-      escapeValue: false, // React ya escapa valores
+      escapeValue: false,
     },
     detection: {
       order: ['localStorage', 'navigator'],

@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
         CREATE_NEW_PASSWORD: `${AUTH_BASE}/reset-password`,
         VERIFY_EMAIL: `${AUTH_BASE}/verify-email`,
         RESEND_VERIFICATION_EMAIL: `${AUTH_BASE}/resend-verification`,
+        GOOGLE_AUTH: `${AUTH_BASE}/google`,
+        GOOGLE_CALLBACK: `${AUTH_BASE}/google/callback`, 
 
     }
 } as const;

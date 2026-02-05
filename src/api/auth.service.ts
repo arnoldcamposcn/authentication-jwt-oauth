@@ -2,6 +2,7 @@ import { api, setAccessToken } from "./axios.instance";
 import { AuthResponse, LoginData, RefreshResponse, RegisterData, ResetPasswordPayload } from "../types/auth";
 import { API_ENDPOINTS } from "../components/shared/api.endpoints";
 
+
 export const authService = {
 
   login: async (payload: LoginData): Promise<AuthResponse> => {

@@ -9,7 +9,8 @@ import {
   FormVerifyEmail,
   FormRecoverPassword,
   FormCreateNewPassword,
-  Dashboard
+  Dashboard,
+  GoogleCallback
 } from './lazyPages';
 
 export const AppRoutes = () => {
@@ -31,6 +32,7 @@ export const AppRoutes = () => {
                     />
                     <Route path="/auth/recover-password" element={<FormRecoverPassword/>}/>
                     <Route path="/auth/create-new-password" element={<FormCreateNewPassword/>}/>
+                    <Route path="/auth/google/callback" element={<GoogleCallback/>}/>
                 </Routes>
             </Suspense>
         </BrowserRouter>

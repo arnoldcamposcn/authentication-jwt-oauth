@@ -18,11 +18,17 @@ export const setAccessToken = (token: string | null) => {
 
 export const getAccessToken = () => accessToken;
 
+
+/* =====================================================
+   API BASE URL
+===================================================== */
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 /* =====================================================
    INSTANCIA AXIOS
 ===================================================== */
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
+  baseURL: API_BASE_URL,
   withCredentials: true, // necesario para cookies httpOnly (refresh token)
   headers: {
     "Content-Type": "application/json",
@@ -76,7 +82,7 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // 🌐 Error de red
+
     if (!error.response) {
       return Promise.reject(error);
     }
