@@ -3,6 +3,9 @@
 ## Arquitectura de Autenticación
 
 ### Almacenamiento de Tokens
+------------
+Seguridad - Fintech | Bancario
+------------
 
 **Token de Acceso (Access Token):**
 - Almacenado en **memoria** (variable JavaScript)
