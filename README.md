@@ -20,3 +20,6 @@
 1. **Seguridad**: Reduce el riesgo de ataques XSS
 2. **Privacidad**: Los tokens no persisten en el dispositivo
 3. **Mejores prácticas**: Alineado con OWASP recommendations
+
+-----------------
+No olvidar cambiar la persistencia del token :X
