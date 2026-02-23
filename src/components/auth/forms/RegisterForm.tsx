@@ -3,11 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema, RegisterData } from '../../../types/auth'
 import { toast } from 'react-toastify'
 import { authService } from '../../../api';
-import { setAccessToken } from '../../../api/axios.instance'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { Button } from '../../atoms/Button';
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
+import { GoogleAuthButton } from '../../atoms/GoogleAuthButton'
 
 export const FormRegister = () => {
 
@@ -20,17 +22,20 @@ export const FormRegister = () => {
 
     const onSubmit = async (data: RegisterData) => {
         try {
-            const response = await authService.register(data)
-            console.log('Token guardado en memoria:', response.accessToken)
-            setAccessToken(response.accessToken)
+            await authService.register(data)
+
+            localStorage.setItem('pendingVerificationEmail', data.email)
+
+            logger.log('Email guardado para verificación:', data.email)
             reset()
-            toast.success('Registro exitoso')
+            toast.success('Registro exitoso. Revisa tu correo para verificar tu cuenta.')
+
             setTimeout(() => {
-                navigate('/dashboard')
+                navigate('/auth/verify-email')
             }, 1000)
         } catch (error) {
-            toast.error('Error al registrar')
-            console.error('Error al registrar', error)
+            logger.error('Error al registrar', error)
+            handleError(error)
         }
     }
 
@@ -72,11 +77,28 @@ export const FormRegister = () => {
                             isLoading={isSubmitting}
                             fullWidth
                             loadingText='Registrando...'
-                            className="btn-purple-gradient"
+                            variant="purple"
                         >
                             Registrar
                         </Button>
                     </form>
+
+
+                    <div className="my-6">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white text-gray-500">O</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <GoogleAuthButton />
+
+
 
                     <div className='mt-6 text-center'>
                         <p className='text-sm text-gray-600'>

@@ -1,0 +1,43 @@
+{
+  "errors": {
+    "AUTH_INVALID_CREDENTIALS": "Credenciales incorrectas",
+    "AUTH_EMAIL_ALREADY_REGISTERED": "El correo ya está registrado",
+    "REFRESH_TOKEN_MISSING": "No se proporcionó el token de actualización",
+    "REFRESH_TOKEN_INVALID": "El token de actualización es inválido",
+    "RESET_TOKEN_INVALID_OR_EXPIRED": "El enlace de recuperación es inválido o expiró",
+    "EMAIL_SEND_ERROR": "Error al enviar el correo de recuperación",
+    
+    "EMAIL_NOT_VERIFIED": "Email no verificado. Por favor verifica tu correo electrónico.",
+    "VERIFICATION_CODE_INVALID_OR_EXPIRED": "Código inválido o expirado",
+    "EMAIL_ALREADY_VERIFIED": "El correo ya está verificado",
+    "VERIFICATION_CODE_SEND_ERROR": "Error al enviar el código de verificación",
+    "USER_NOT_FOUND": "Usuario no encontrado",
+
+    "BAD_REQUEST": "Solicitud inválida",
+    "UNAUTHORIZED": "No autorizado",
+    "FORBIDDEN": "Acceso denegado",
+    "NOT_FOUND": "Recurso no encontrado",
+    "CONFLICT": "Conflicto con el estado actual",
+    "UNPROCESSABLE_ENTITY": "Datos inválidos",
+    "TOO_MANY_REQUESTS": "Demasiadas solicitudes, intenta más tarde",
+
+    "INTERNAL_SERVER_ERROR": "Error del servidor, intenta nuevamente más tarde",
+    "BAD_GATEWAY": "Error de comunicación con el servidor",
+    "SERVICE_UNAVAILABLE": "Servicio no disponible temporalmente",
+    "GATEWAY_TIMEOUT": "El servidor tardó demasiado en responder",
+
+    "NETWORK_ERROR": "Error de conexión. Verifica tu internet",
+    "UNKNOWN_ERROR": "Error desconocido",
+    "UNEXPECTED_ERROR": "Ocurrió un error inesperado"
+  },
+
+  "login": {
+    "title": "Iniciar sesión",
+    "button": "Entrar"
+  },
+
+  "register": {
+    "title": "Crear cuenta",
+    "button": "Registrarse"
+  }
+}

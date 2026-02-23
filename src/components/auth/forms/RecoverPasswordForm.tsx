@@ -8,8 +8,10 @@ import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { EmailConfirmation } from '../../organisms/EmailConfirmation'
 import { Button } from '../../atoms/Button'
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
 
-export const FormRecoverPassword = () => {
+export const FormRecoverPassword = () => {  
     const [emailSent, setEmailSent] = useState(false)
     const [userEmail, setUserEmail] = useState<string>('')
 
@@ -25,8 +27,8 @@ export const FormRecoverPassword = () => {
             setEmailSent(true)
             toast.success('Correo de recuperación enviado')
         } catch (error) {
-            console.error('Error al recuperar contraseña', error)
-            toast.error('Error al recuperar contraseña')
+            logger.error('Error al recuperar contraseña', error)
+            handleError(error)
         }
     }
 
@@ -76,7 +78,7 @@ export const FormRecoverPassword = () => {
                             isLoading={isSubmitting}
                             loadingText='Enviando correo de recuperación...'
                             fullWidth
-                            className="btn-purple-gradient"
+                            variant="purple"
                         >
                             Enviar correo de recuperación
                         </Button>

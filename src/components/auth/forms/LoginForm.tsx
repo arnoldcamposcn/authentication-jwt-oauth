@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Input } from '../../atoms/Input'
 import { Button } from '../../atoms/Button'
+import { handleError } from '../../../utils/errorHandler'
+import { logger } from '../../../utils/logger'
+import { GoogleAuthButton } from '../../atoms/GoogleAuthButton'
 
 
 export const FormLogin = () => {
@@ -19,11 +22,10 @@ export const FormLogin = () => {
     })
 
     const onSubmit = async (data: LoginData) => {
-
         try {
             const response = await authService.login(data)
             setAccessToken(response.accessToken)
-            console.log('Token guardado en memoria:', response.accessToken)
+            logger.log('Token guardado en memoria:', response.accessToken)
 
             reset()
             toast.success('Inicio de sesión exitoso')
@@ -31,11 +33,9 @@ export const FormLogin = () => {
             setTimeout(() => {
                 navigate('/dashboard')
             }, 1000)
-        }
-
-        catch (error) {
-            console.error('Error al iniciar sesión', error)
-            toast.error('Error al iniciar sesión')
+        } catch (error) {
+            logger.error('Error al iniciar sesión', error)
+            handleError(error)
         }
     }
 
@@ -79,11 +79,26 @@ export const FormLogin = () => {
                                 isLoading={isSubmitting}
                                 fullWidth
                                 loadingText='Iniciando sesión...'
-                                className="btn-purple-gradient"
+                                variant="purple"
                             >
                                 Iniciar sesión
                             </Button>
                         </form>
+
+
+                        <div className="my-6">
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-gray-300"></div>
+                                </div>
+                                <div className="relative flex justify-center text-sm">
+                                    <span className="px-2 bg-white text-gray-500">O</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <GoogleAuthButton />
 
 
                         <div className='mt-6 space-y-3 text-center'>
